@@ -20,9 +20,9 @@
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="http://http://168.150.73.56/:3000/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io.connect('http://http://168.150.73.56/:3000');
+        var socket = io();
         var form = document.getElementById('form');
         var input = document.getElementById('input');
 
