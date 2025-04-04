@@ -1,5 +1,8 @@
-const myFunction = require('./functions.js');
+// Global Variables
+render = false; // render is the website used to hosted these files, set to false if hosted local
 
+
+const myFunction = require('./functions.js');
 const express = require('express')();
 const app = express;
 const http = require('http');
@@ -7,7 +10,10 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const port = 3000;
+
 var connectionArr = new Array();
+var msgArr = [];
+var screenMessage = "";
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -21,7 +27,6 @@ io.on('connection', (socket) => {
   connectionArr.push(clientIp);
   console.log("user (" + clientIp + ") has connected\nConnection Array: " + connectionArr);
 
-
   // on disconnect
   socket.on('disconnect', () => {
     connectionArr.splice(connectionArr.lastIndexOf(clientIp));
@@ -30,7 +35,15 @@ io.on('connection', (socket) => {
 
   // on send message
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg); // everyone sees the message
+    if (msgArr.findIndex(msg => msg.ip == clientIp) == -1) {
+      msgArr.push({text: msg, ip: clientIp});
+      screenMessage = "New Chatter: " + clientIp + ": " + msg;
+    } else {
+      msgArr.push({text: msg, ip: clientIp});
+      screenMessage = clientIp + ": " + msg;
+    }
+
+    io.emit('chat message', screenMessage); // everyone sees the message
     // console.log("user (" + clientIp + ") has sent a message: " + msg);
   })
 });
