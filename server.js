@@ -12,10 +12,9 @@ const port = 3000;
 
 var connectionArr = new Array();
 var msgArr = [];
-var renderArr = new Array();
 var screenMessage = "";
 
-app.get('/', (req, res) => {
+app.get('/', (res) => {
   res.sendFile(__dirname + "/index.html");
 })
 
@@ -25,7 +24,6 @@ io.on('connection', (socket) => {
   clientIp = myFunction.trimIp(clientIp);
 
   connectionArr.push(clientIp);
-  connectionArr = myFunction.removeHostedIp(connectionArr);
   console.log("user (" + clientIp + ") has connected\nConnection Array: " + connectionArr);
 
   // on disconnect
