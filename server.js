@@ -1,6 +1,5 @@
 // Global Variables
-render = false; // render is the website used to hosted these files, set to false if hosted local
-
+render = true; // render is the website used to hosted these files, set to false if hosted local
 
 const myFunction = require('./functions.js');
 const express = require('express')();
@@ -13,6 +12,7 @@ const port = 3000;
 
 var connectionArr = new Array();
 var msgArr = [];
+var renderArr = new Array();
 var screenMessage = "";
 
 app.get('/', (req, res) => {
@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   var clientIp = socket.handshake.headers['x-forwarded-for'] ? socket.handshake.headers['x-forwarded-for'] : socket.handshake.address;
   clientIp = myFunction.trimIp(clientIp);
+  clientIp = myFunction.removeHostedIp(connectionArr);
 
   connectionArr.push(clientIp);
   console.log("user (" + clientIp + ") has connected\nConnection Array: " + connectionArr);
