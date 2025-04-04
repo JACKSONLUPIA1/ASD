@@ -23,9 +23,9 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   var clientIp = socket.handshake.headers['x-forwarded-for'] ? socket.handshake.headers['x-forwarded-for'] : socket.handshake.address;
   clientIp = myFunction.trimIp(clientIp);
-  clientIp = myFunction.removeHostedIp(connectionArr);
 
   connectionArr.push(clientIp);
+  connectionArr = myFunction.removeHostedIp(connectionArr);
   console.log("user (" + clientIp + ") has connected\nConnection Array: " + connectionArr);
 
   // on disconnect
