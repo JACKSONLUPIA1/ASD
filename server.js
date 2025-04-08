@@ -1,4 +1,6 @@
 // import { Manager } from "socket.io-client";
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 // Global Variables
 render = true; // render is the website used to hosted these files, set to false if hosted local
