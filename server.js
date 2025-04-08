@@ -1,5 +1,5 @@
 // import { Manager } from "socket.io-client";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+// import { SpeedInsights } from "@vercel/speed-insights/next"
 
 
 // Global Variables
