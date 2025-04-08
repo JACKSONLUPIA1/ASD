@@ -1,3 +1,5 @@
+// import { Manager } from "socket.io-client";
+
 // Global Variables
 render = true; // render is the website used to hosted these files, set to false if hosted local
 
@@ -9,12 +11,12 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const port = 3000;
-
 var connectionArr = new Array();
 var msgArr = [];
 var screenMessage = "";
+var commandMessage = "";
 
-app.get('/', (res) => {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + "/index.html");
 })
 
@@ -34,18 +36,39 @@ io.on('connection', (socket) => {
 
   // on send message
   socket.on('chat message', (msg) => {
-    if (msgArr.findIndex(msg => msg.ip == clientIp) == -1) {
-      msgArr.push({text: msg, ip: clientIp});
-      screenMessage = "New Chatter: " + clientIp + ": " + msg;
+    // command
+    if (msg[0] === '/') {
+      commandMessage = myFunction.getCommand(msg);
+      socket.emit('chat message', commandMessage);
     } else {
-      msgArr.push({text: msg, ip: clientIp});
-      screenMessage = clientIp + ": " + msg;
+      if (msgArr.findIndex(msg => msg.ip == clientIp) === -1) {
+        msgArr.push({text: msg, ip: clientIp});
+        screenMessage = "New Chatter: " + clientIp + ": " + msg;
+      } else {
+        msgArr.push({text: msg, ip: clientIp});
+        screenMessage = clientIp + ": " + msg;
+      }
+      io.emit('chat message', screenMessage); // everyone sees the message
     }
+  }); 
 
-    io.emit('chat message', screenMessage); // everyone sees the message
-    // console.log("user (" + clientIp + ") has sent a message: " + msg);
-  })
+
+  socket.conn.on("packet", ({ type, data }) => {
+    // called for each packet received
+    console.log("Packet Information: " + type + " " + data);
+  });
+
+  // socket.on('connection', () => {
+  //   const engine = socket.io.engine;
+  //   console.log(engine.transport.name);
+  //   engine.on("packet", ({ type, data }) => {
+  //     // called for each packet received
+  //     console.log("Packet Type: " + type + "\nData: " + data);
+  //   });
+  // });
+
 });
+
 
 // host server from port
 server.listen(port, () => {

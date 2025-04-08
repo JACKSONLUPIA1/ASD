@@ -10,6 +10,23 @@ module.exports = {
     }
   },
 
+  getCommand: function(message) {
+    if (message.substring(1).indexOf('/') !== -1) {
+      console.log("Error in using function 'getCommand' Function can only accept one '/'");
+      return;
+    }
+    
+    newMessage = message.split('/').pop();
+
+    switch (newMessage) {
+      case "help":
+        return "This is a chat bot project created by a cyber security student to help understand networking more.\nThis website has no practical value. Try to burp me ;)";
+      default:
+        console.log("unknown command: /" + newMessage);
+        break;
+    }
+  },
+
   // checkIpConnection: function(arr, ip) {
   //   if (arr.includes(ip) && arr.length > 1) {
   //     // dup ip
@@ -20,9 +37,9 @@ module.exports = {
   // },
 
   // creates array to set (remove dupes)
-  // toSet: function(arr) {
-  //   return [new Set(arr)];
-  // },
+  toSet: function(arr) {
+    return [new Set(arr)];
+  },
 
   // removeHostedIp: function(arr) {
   //   if (!render) {
